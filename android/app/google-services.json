@@ -1,0 +1,146 @@
+{
+  "project_info": {
+    "project_number": "582415906606",
+    "firebase_url": "https://kimii-d7954.firebaseio.com",
+    "project_id": "kimii-d7954",
+    "storage_bucket": "kimii-d7954.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582415906606:android:22105fb7891fe67721ecbf",
+        "android_client_info": {
+          "package_name": "com.kimii.delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582415906606-5sr69059ad0n12p4979jondo7fu3va2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNitMufPX4lmfTzhVERE8eCxy_yGPP3sU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582415906606-5sr69059ad0n12p4979jondo7fu3va2u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "582415906606-fp45c4aokms50kkvi3qq6h3no8gok2b9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kimii.kcore",
+                "app_store_id": "1528067048"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582415906606:android:c9156c53b9d65ae821ecbf",
+        "android_client_info": {
+          "package_name": "com.kimii.kcore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582415906606-55p9kd2gmq19ikrrp9kdk73gvqptv4v8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kimii.kcore",
+            "certificate_hash": "f6cbcf26599a656797b6373da0ee24995b9d0c79"
+          }
+        },
+        {
+          "client_id": "582415906606-9ee05rdf615cch1offso6lpesabtl4be.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kimii.kcore",
+            "certificate_hash": "b1c698a222c2bbd7351264c00ed282dabdb5e00c"
+          }
+        },
+        {
+          "client_id": "582415906606-vfsqaujgt4kvuff6di8ou8u9ku4rdkap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kimii.kcore",
+            "certificate_hash": "790b9ecfb1f9cc1f19da14cf3cf86f6a02f50cd4"
+          }
+        },
+        {
+          "client_id": "582415906606-5sr69059ad0n12p4979jondo7fu3va2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNitMufPX4lmfTzhVERE8eCxy_yGPP3sU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582415906606-5sr69059ad0n12p4979jondo7fu3va2u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "582415906606-fp45c4aokms50kkvi3qq6h3no8gok2b9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kimii.kcore",
+                "app_store_id": "1528067048"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582415906606:android:2ba5d3ffff3d0b7c21ecbf",
+        "android_client_info": {
+          "package_name": "com.kimii.vendedor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582415906606-5sr69059ad0n12p4979jondo7fu3va2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNitMufPX4lmfTzhVERE8eCxy_yGPP3sU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582415906606-5sr69059ad0n12p4979jondo7fu3va2u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "582415906606-fp45c4aokms50kkvi3qq6h3no8gok2b9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kimii.kcore",
+                "app_store_id": "1528067048"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
