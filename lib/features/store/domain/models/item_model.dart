@@ -53,7 +53,7 @@ class Item {
   String? name;
   String? description;
   String? imageFullUrl;
-  List<String>? imagesFullUrl;
+  List<String?>? imagesFullUrl;
   int? categoryId;
   List<CategoryIds>? categoryIds;
   List<Variation>? variations;
@@ -90,6 +90,10 @@ class Item {
   int? brandId;
   int? isHalal;
   int? halalTagStatus;
+  List<String?>? nutrition;
+  List<String?>? allergies;
+  List<String?>? genericName;
+  int? isBasicMedicine;
 
   Item({
     this.id,
@@ -133,6 +137,10 @@ class Item {
     this.brandId,
     this.isHalal,
     this.halalTagStatus,
+    this.nutrition,
+    this.allergies,
+    this.genericName,
+    this.isBasicMedicine
   });
 
   Item.fromJson(Map<String, dynamic> json) {
@@ -140,7 +148,14 @@ class Item {
     name = json['name'];
     description = json['description'];
     imageFullUrl = json['image_full_url'];
-    imagesFullUrl = json['images_full_url'] != null ? json['images_full_url'].cast<String>() : [];
+    if(json['images_full_url'] != null){
+      imagesFullUrl = [];
+      json['images_full_url'].forEach((v) {
+        if(v != null) {
+          imagesFullUrl!.add(v.toString());
+        }
+      });
+    }
     categoryId = json['category_id'];
     if (json['category_ids'] != null) {
       categoryIds = [];
@@ -218,6 +233,25 @@ class Item {
     brandId = json['brand_id'];
     isHalal = json['is_halal'];
     halalTagStatus = json['halal_tag_status'];
+    if(json['nutritions_name'] != null) {
+      nutrition = [];
+      for(String v in json['nutritions_name']) {
+        nutrition!.add(v);
+      }
+    }
+    if(json['allergies_name'] != null) {
+      allergies = [];
+      for(String v in json['allergies_name']) {
+        allergies!.add(v);
+      }
+    }
+    if(json['generic_name'] != null) {
+      genericName = [];
+      for(String v in json['generic_name']) {
+        genericName!.add(v);
+      }
+    }
+    isBasicMedicine = json['is_basic'];
   }
 
   Map<String, dynamic> toJson() {
@@ -241,8 +275,7 @@ class Item {
     }
     data['attributes'] = attributes;
     if (choiceOptions != null) {
-      data['choice_options'] =
-          choiceOptions!.map((v) => v.toJson()).toList();
+      data['choice_options'] = choiceOptions!.map((v) => v.toJson()).toList();
     }
     data['price'] = price;
     data['tax'] = tax;
@@ -277,6 +310,16 @@ class Item {
     data['brand_id'] = brandId;
     data['is_halal'] = isHalal;
     data['halal_tag_status'] = halalTagStatus;
+    if (nutrition != null) {
+      data['nutritions_name'] = nutrition;
+    }
+    if (allergies != null) {
+      data['allergies_name'] = allergies;
+    }
+    if (genericName != null) {
+      data['generic_name'] = genericName;
+    }
+    data['is_basic'] = isBasicMedicine;
     return data;
   }
 }

@@ -32,23 +32,21 @@ class _WalletScreenState extends State<WalletScreen> {
     Get.find<PaymentController>().getWithdrawList();
     Get.find<PaymentController>().getWithdrawMethodList();
     Get.find<PaymentController>().getWalletPaymentList();
+    if(Get.find<ProfileController>().profileModel == null) {
+      Get.find<ProfileController>().getProfile();
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    if(Get.find<ProfileController>().profileModel == null) {
-      Get.find<ProfileController>().getProfile();
-    }
-
     return Scaffold(
 
       appBar: CustomAppBarWidget(title: 'wallet'.tr, isBackButtonExist: false),
 
       body: GetBuilder<ProfileController>(builder: (profileController) {
         return GetBuilder<PaymentController>(builder: (bankController) {
-          return profileController.modulePermission!.wallet! ? (profileController.profileModel != null && bankController.withdrawList != null) ? RefreshIndicator(
+          return (profileController.profileModel != null && bankController.withdrawList != null) ? profileController.modulePermission!.wallet! ? RefreshIndicator(
             onRefresh: () async {
               await Get.find<ProfileController>().getProfile();
               await Get.find<PaymentController>().getWithdrawList();
@@ -362,7 +360,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 ? WalletAttentionAlertWidget(isOverFlowBlockWarning: profileController.profileModel!.overFlowBlockWarning!) : const SizedBox(),
 
             ]),
-          ) : const Center(child: CircularProgressIndicator()) : Center(child: Text('you_have_no_permission_to_access_this_feature'.tr, style: robotoMedium));
+          ) : Center(child: Text('you_have_no_permission_to_access_this_feature'.tr, style: robotoMedium)) : const Center(child: CircularProgressIndicator());
         });
       }),
     );

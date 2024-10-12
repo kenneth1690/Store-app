@@ -1,8 +1,8 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart_store/features/profile/domain/models/profile_model.dart';
 import 'package:sixam_mart_store/features/store/domain/models/band_model.dart';
 import 'package:sixam_mart_store/features/store/domain/models/review_model.dart';
 import 'package:sixam_mart_store/interface/repository_interface.dart';
-import 'package:image_compression_flutter/image_compression_flutter.dart';
 import 'package:sixam_mart_store/features/store/domain/models/item_model.dart';
 
 abstract class StoreRepositoryInterface<T> extends RepositoryInterface<Schedules> {
@@ -11,7 +11,7 @@ abstract class StoreRepositoryInterface<T> extends RepositoryInterface<Schedules
   Future<dynamic> getPendingItemDetails(int itemId);
   Future<dynamic> getAttributeList(Item? item);
   Future<dynamic> updateStore(Store store, XFile? logo, XFile? cover, String min, String max, String type, List<Translation> translation);
-  Future<dynamic> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags);
+  Future<dynamic> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags, String nutrition, String allergicIngredients, String genericName);
   Future<dynamic> deleteItem(int? itemID, bool pendingItem);
   Future<List<ReviewModel>?> getStoreReviewList(int? storeID, String? searchText);
   Future<dynamic> getItemReviewList(int? itemID);
@@ -22,4 +22,7 @@ abstract class StoreRepositoryInterface<T> extends RepositoryInterface<Schedules
   Future<dynamic> updateAnnouncement(int status, String announcement);
   Future<List<BrandModel>?> getBrandList();
   Future<bool> updateReply(int reviewID, String reply);
+  Future<List<String?>?> getNutritionSuggestionList();
+  Future<List<String?>?> getAllergicIngredientsSuggestionList();
+  Future<List<String?>?> getGenericNameSuggestionList();
 }

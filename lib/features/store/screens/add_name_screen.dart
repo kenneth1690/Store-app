@@ -135,7 +135,7 @@ class AddNameScreenState extends State<AddNameScreen> {
                           : _descriptionControllerList[0].text.trim(),
                     ));
                   }
-                  Get.toNamed(RouteHelper.getAddItemRoute(widget.item, translations));
+                  Get.toNamed(RouteHelper.getAddItemRoute(widget.item));
                 }
               },
             ),

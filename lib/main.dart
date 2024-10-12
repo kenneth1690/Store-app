@@ -48,7 +48,7 @@ Future<void> main() async {
     await Firebase.initializeApp();
   }
 
-  NotificationBody? body;
+  NotificationBodyModel? body;
   try {
     if (GetPlatform.isMobile) {
       final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
@@ -65,7 +65,7 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   final Map<String, Map<String, String>>? languages;
-  final NotificationBody? body;
+  final NotificationBodyModel? body;
   const MyApp({super.key, required this.languages, required this.body});
 
   @override

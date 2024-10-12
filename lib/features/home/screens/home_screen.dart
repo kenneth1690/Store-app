@@ -20,9 +20,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
 
   Future<void> _loadData() async {
     await Get.find<ProfileController>().getProfile();
@@ -32,7 +44,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _loadData();
 
     return Scaffold(
 
@@ -131,7 +142,7 @@ class HomeScreen extends StatelessWidget {
               ]) : const SizedBox(),
               const SizedBox(height: Dimensions.paddingSizeDefault),
 
-              profileController.modulePermission!.wallet! ? Row(children: [
+              profileController.modulePermission != null && profileController.modulePermission!.wallet! ? Row(children: [
                 Expanded(
                   child: Container(
                     height: 200,
@@ -222,7 +233,7 @@ class HomeScreen extends StatelessWidget {
                   orderList = orderController.runningOrders![orderController.orderIndex].orderList;
                 }
 
-                return Get.find<ProfileController>().modulePermission!.order! ? Column(children: [
+                return profileController.modulePermission != null ? Get.find<ProfileController>().modulePermission!.order! ? Column(children: [
 
                   orderController.runningOrders != null ? Container(
                     height: 40,
@@ -288,7 +299,14 @@ class HomeScreen extends StatelessWidget {
                 ]) : Center(child: Padding(
                   padding: const EdgeInsets.only(top: 100),
                   child: Text('you_have_no_permission_to_access_this_feature'.tr, style: robotoMedium),
-                ));
+                )) : ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return OrderShimmerWidget(isEnabled: orderController.runningOrders == null);
+                  },
+                );
               }),
 
             ]);

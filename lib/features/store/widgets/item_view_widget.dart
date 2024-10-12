@@ -44,6 +44,7 @@ class ItemViewWidget extends StatelessWidget {
     });
     return GetBuilder<StoreController>(builder: (storeController) {
       return Column(children: [
+        const SizedBox(height: Dimensions.paddingSizeDefault),
 
         type != null ? VegFilterWidget(type: type, onSelected: onVegFilterTap) : const SizedBox(),
 
@@ -52,18 +53,21 @@ class ItemViewWidget extends StatelessWidget {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisSpacing: Dimensions.paddingSizeLarge,
             mainAxisSpacing: 0.01,
-            childAspectRatio: 4,
             crossAxisCount: 1,
+            mainAxisExtent: 120,
           ),
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: storeController.itemList!.length,
           padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
           itemBuilder: (context, index) {
-            return ItemWidget(
-              item: storeController.itemList![index],
-              index: index, length: storeController.itemList!.length, isCampaign: false,
-              inStore: true,
+            return Padding(
+              padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
+              child: ItemWidget(
+                item: storeController.itemList![index],
+                index: index, length: storeController.itemList!.length, isCampaign: false,
+                inStore: true,
+              ),
             );
           },
         ) : Padding(

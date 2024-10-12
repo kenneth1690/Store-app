@@ -865,6 +865,7 @@
   "you_will_get" : "ستحصل",
   "to_your_wallet_for_remaining" : "إلى محفظتك المتبقية",
   "days_subscription_plan" : "خطة الاشتراك أيام",
+
   "loading": "جار التحميل...",
   "advertisements": "الإعلانات",
   "ads_details": "تفاصيل الإعلانات",
@@ -948,5 +949,29 @@
   "you_want_to_enable_notification": "هل تريد تمكين الإشعارات؟",
   "you_want_to_disable_notification": "هل تريد تعطيل الإشعارات؟",
   "no_data_available": "لا توجد بيانات متاحة",
-  "ads_title": "عنوان الإعلانات"
+  "ads_title": "عنوان الإعلانات",
+  "you_can_not_close_the_store_because_you_already_have_running_orders": "لا يمكنك إغلاق المتجر لأن لديك طلبات جارية",
+  "you_can_not_close_the_restaurant_because_you_already_have_running_orders": "لا يمكنك إغلاق المطعم لأن لديك طلبات جارية",
+  "advertisement_paused_successfully": "تم إيقاف الإعلان بنجاح",
+  "advertisement_resume_successfully": "تم استئناف الإعلان بنجاح",
+
+  "insert_language_wise_item_name_and_description": "أدخل اسم ووصف العنصر حسب اللغة",
+  "item_setup": "إعداد العنصر",
+  "nutrition": "التغذية",
+  "allergic_ingredients": "المكونات المسببة للحساسية",
+  "is_it_halal": "هل هو حلال؟",
+  "availability": "التوافر",
+  "price_info": "معلومات السعر",
+  "tag": "علامة",
+  "generic_name": "الاسم العام",
+  "you_can_select_or_add_maximum_5_nutrition": "يمكنك اختيار أو إضافة بحد أقصى 5 مكونات غذائية",
+  "you_can_select_or_add_maximum_5_allergic_ingredients": "يمكنك اختيار أو إضافة بحد أقصى 5 مكونات مسببة للحساسية",
+  "you_can_select_or_add_maximum_5_generic_name": "يمكنك اختيار أو إضافة بحد أقصى 5 أسماء عامة",
+  "discount_cannot_be_more_than_100": "لا يمكن أن يكون الخصم أكثر من 100%",
+  "discount_cannot_be_more_than_price": "لا يمكن أن يكون الخصم أكثر من السعر",
+  "is_basic_medicine": "هل هي دواء أساسي؟",
+  "discount_cant_be_more_then_minimum_variation_price": "لا يمكن أن يكون الخصم أكثر من أقل سعر للنوع",
+  "specify_the_ingredients_of_the_item_which_can_make_a_reaction_as_an_allergen": "حدد مكونات العنصر التي يمكن أن تسبب تفاعل كمسبب للحساسية",
+  "specify_the_necessary_keywords_relating_to_energy_values_for_the_item": "حدد الكلمات الرئيسية الضرورية المتعلقة بقيم الطاقة للعنصر",
+  "specify_the_medicine_active_ingredient_that_makes_it_work": "حدد المكون النشط في الدواء الذي يجعله يعمل"
 }

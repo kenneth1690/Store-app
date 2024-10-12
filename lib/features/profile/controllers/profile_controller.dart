@@ -35,7 +35,7 @@ class ProfileController extends GetxController implements GetxService {
       _profileModel = profileModel;
       Get.find<SplashController>().setModule(_profileModel!.stores![0].module!.id, _profileModel!.stores![0].module!.moduleType);
       profileServiceInterface.updateHeader(_profileModel!.stores![0].module!.id);
-      _allowModulePermission(_profileModel!.roles);
+      _allowModulePermission(_profileModel?.roles);
     }
     update();
   }

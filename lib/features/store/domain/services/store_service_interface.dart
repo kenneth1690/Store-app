@@ -1,4 +1,5 @@
-import 'package:image_compression_flutter/image_compression_flutter.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart_store/features/store/domain/models/attribute_model.dart';
 import 'package:sixam_mart_store/features/store/domain/models/band_model.dart';
 import 'package:sixam_mart_store/features/store/domain/models/item_model.dart';
@@ -16,7 +17,7 @@ abstract class StoreServiceInterface {
   Future<Item?> getItemDetails(int itemId);
   Future<List<AttributeModel>?> getAttributeList(Item? item);
   Future<bool> updateStore(Store store, XFile? logo, XFile? cover, String min, String max, String type, List<Translation> translation);
-  Future<bool> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags);
+  Future<Response> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags, String nutrition, String allergicIngredients, String genericName);
   Future<bool> deleteItem(int? itemID, bool pendingItem);
   Future<List<ReviewModel>?> getStoreReviewList(int? storeID, String? searchText);
   Future<List<ReviewModel>?> getItemReviewList(int? itemID);
@@ -36,4 +37,7 @@ abstract class StoreServiceInterface {
   Future<List<BrandModel>?> getBrandList();
   int? setBrandIndex(List<BrandModel>? brands, Item? item);
   Future<bool> updateReply(int reviewID, String reply);
+  Future<List<String?>?> getNutritionSuggestionList();
+  Future<List<String?>?> getAllergicIngredientsSuggestionList();
+  Future<List<String?>?> getGenericNameSuggestionList();
 }

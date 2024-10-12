@@ -291,7 +291,7 @@ class SubscriptionController extends GetxController implements GetxService {
   }
 
   Future<bool> trialEndBottomSheet() async {
-    if(Get.find<ProfileController>().profileModel!.stores![0].storeBusinessModel != 'commission' && Get.find<ProfileController>().profileModel!.subscription?.status == 0) {
+    if(Get.find<ProfileController>().profileModel != null && Get.find<ProfileController>().profileModel!.stores![0].storeBusinessModel != 'commission' && Get.find<ProfileController>().profileModel!.subscription?.status == 0) {
       Future.delayed(const Duration(seconds: 1), () {
         showModalBottomSheet(
           context: Get.context!, isScrollControlled: true, backgroundColor: Colors.transparent,

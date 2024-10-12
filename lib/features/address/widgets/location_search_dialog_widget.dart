@@ -13,7 +13,7 @@ class LocationSearchDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
+    final TextEditingController searchController = TextEditingController();
 
     return Scrollable(viewportBuilder: (context, viewPostOffset) => Container(
       margin: const EdgeInsets.only(top:  0),
@@ -22,8 +22,8 @@ class LocationSearchDialogWidget extends StatelessWidget {
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
         child: SizedBox(width: context.width, child: TypeAheadField(
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: controller,
+          builder: (context, controller, focusNode) => TextField(
+            controller: searchController,
             textInputAction: TextInputAction.search,
             autofocus: true,
             textCapitalization: TextCapitalization.words,
@@ -59,7 +59,7 @@ class LocationSearchDialogWidget extends StatelessWidget {
               ]),
             );
           },
-          onSuggestionSelected: (PredictionModel suggestion) async {
+          onSelected: (PredictionModel suggestion) async {
             Position position = await Get.find<AddressController>().setSuggestedLocation(suggestion.placeId, suggestion.description, mapController);
             Get.back(result: position);
           },

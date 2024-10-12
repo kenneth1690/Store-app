@@ -114,7 +114,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBin
 
     return PopScope(
       canPop: Navigator.canPop(context),
-      onPopInvoked: (didPop) async{
+      onPopInvokedWithResult: (didPop, result) async{
         if(widget.fromNotification && !didPop) {
           Get.offAllNamed(RouteHelper.getInitialRoute());
         } else {
@@ -460,7 +460,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBin
                         } else {
                           _timer?.cancel();
                           await Get.toNamed(RouteHelper.getChatRoute(
-                            notificationBody: NotificationBody(
+                            notificationBody: NotificationBodyModel(
                               orderId: order.id, customerId: order.customer!.id,
                             ),
                             user: User(
@@ -532,7 +532,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBin
                           } else {
                             _timer?.cancel();
                             await Get.toNamed(RouteHelper.getChatRoute(
-                              notificationBody: NotificationBody(
+                              notificationBody: NotificationBodyModel(
                                 orderId: controllerOrderModel.id, deliveryManId: order.deliveryMan!.id,
                               ),
                               user: User(
@@ -861,7 +861,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> with WidgetsBin
                       Get.dialog(ConfirmationDialogWidget(
                         icon: Images.warning, title: 'are_you_sure_to_confirm'.tr, description: 'you_want_to_confirm_this_order'.tr,
                         onYesPressed: () {
-                          orderController.updateOrderStatus(widget.orderId, AppConstants.confirmed, back: true);
+                          orderController.updateOrderStatus(widget.orderId, AppConstants.confirmed, back: true, fromNotification: true);
                         },
                       ), barrierDismissible: false);
                     },

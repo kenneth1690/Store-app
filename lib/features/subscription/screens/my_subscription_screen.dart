@@ -15,7 +15,8 @@ import 'package:sixam_mart_store/util/dimensions.dart';
 import 'package:sixam_mart_store/util/styles.dart';
 
 class MySubscriptionScreen extends StatefulWidget {
-  const MySubscriptionScreen({super.key});
+  final bool fromNotification;
+  const MySubscriptionScreen({super.key, this.fromNotification = false});
 
   @override
   State<MySubscriptionScreen> createState() => _MySubscriptionScreenState();
@@ -64,14 +65,23 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> with Ticker
       bool businessIsCommission = subscriptionController.profileModel!.stores![0].storeBusinessModel == 'commission';
 
       return PopScope(
-        canPop: true,
-        onPopInvoked: (didPop) {
+        canPop: Navigator.canPop(context),
+        onPopInvokedWithResult: (didPop, result) {
           Get.find<ProfileController>().trialWidgetShow(route: '');
+          if(widget.fromNotification && !didPop) {
+            Get.offAllNamed(RouteHelper.getInitialRoute());
+          } else {
+            return;
+          }
         },
         child: Scaffold(
           appBar: CustomAppBarWidget(title: 'my_business_plan'.tr, onTap: () {
             Get.find<ProfileController>().trialWidgetShow(route: '');
-            Get.back();
+            if(widget.fromNotification){
+              Get.offAllNamed(RouteHelper.getInitialRoute());
+            }else{
+              Get.back();
+            }
           }),
           body: subscriptionController.profileModel != null ? (businessIsCommission && !subscriptionController.profileModel!.subscriptionTransactions!) ? Column(children: [
 
@@ -94,7 +104,9 @@ class _MySubscriptionScreenState extends State<MySubscriptionScreen> with Ticker
                     const SizedBox(height: Dimensions.paddingSizeDefault),
 
                     Text(
-                      '${Get.find<SplashController>().configModel?.adminCommission} %',
+                      '${Get.find<ProfileController>().profileModel != null && Get.find<ProfileController>().profileModel!.stores?[0].comission != null && Get.find<ProfileController>().profileModel!.stores![0].comission! > 0
+                          ? Get.find<ProfileController>().profileModel!.stores![0].comission!
+                          :  Get.find<SplashController>().configModel?.adminCommission} %',
                       style: robotoBold.copyWith(color: Colors.teal, fontSize: 24),
                     ),
                     const SizedBox(height: Dimensions.paddingSizeDefault),

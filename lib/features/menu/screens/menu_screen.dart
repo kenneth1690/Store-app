@@ -21,7 +21,7 @@ class MenuScreen extends StatelessWidget {
 
     if(Get.find<ProfileController>().modulePermission!.item!) {
       menuList.add(MenuModel(
-        icon: Images.addFood, title: 'add_item'.tr, route: RouteHelper.getItemRoute(null),
+        icon: Images.addFood, title: 'add_item'.tr, route: RouteHelper.getAddItemRoute(null),
         isBlocked: !Get.find<ProfileController>().profileModel!.stores![0].itemSection!,
       ));
     }

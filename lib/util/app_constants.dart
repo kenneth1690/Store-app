@@ -3,7 +3,7 @@ import 'package:sixam_mart_store/util/images.dart';
 
 class AppConstants {
   static const String appName = 'KiMii Store';
-  static const double appVersion = 2.9; ///Flutter SDK: 3.22.3
+  static const double appVersion = 2.10; ///Flutter SDK: 3.24.3
 
   static const String fontFamily = 'Roboto';
   static const double limitOfPickedVideoSizeInMB = 50;
@@ -104,6 +104,9 @@ class AppConstants {
   static const String getBrandsUri = '/api/v1/brand';
   static const String updateReplyUri = '/api/v1/vendor/item/reply-update';
   static const String checkZoneUri = '/api/v1/zone/check';
+  static const String getNutritionSuggestionUri = '/api/v1/item/get-nutrition-name-list';
+  static const String getAllergicIngredientsSuggestionUri = '/api/v1/item/get-allergy-name-list';
+  static const String getGenericNameSuggestionUri = '/api/v1/item/get-generic-name-list';
 
 
   /// Subscription url

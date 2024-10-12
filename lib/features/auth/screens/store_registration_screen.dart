@@ -112,7 +112,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> with 
 
         return PopScope(
           canPop: false,
-          onPopInvoked: (didPop) async{
+          onPopInvokedWithResult: (didPop, result) async{
             if(authController.storeStatus == 0.6 && firstTime){
               authController.storeStatusChange(0.1);
               firstTime = false;
@@ -808,7 +808,7 @@ class _StoreRegistrationScreenState extends State<StoreRegistrationScreen> with 
                         moduleId: addressController.moduleList![addressController.selectedModuleIndex!].id.toString(),
                         deliveryTimeType: authController.deliveryTimeTypeList[authController.deliveryTimeTypeIndex],
                         businessPlan: authController.businessIndex == 0 ? 'commission' : 'subscription',
-                        packageId: authController.packageModel!.packages![authController.activeSubscriptionIndex].id!.toString(),
+                        packageId: authController.packageModel!.packages != null && authController.packageModel!.packages!.isNotEmpty ? authController.packageModel!.packages![authController.activeSubscriptionIndex].id!.toString() : '',
                       ).toJson());
 
                       authController.registerStore(data);

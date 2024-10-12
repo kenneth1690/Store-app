@@ -202,6 +202,7 @@ class Store {
   String? longitude;
   String? address;
   double? minimumOrder;
+  double? comission;
   bool? scheduleOrder;
   String? currency;
   String? createdAt;
@@ -252,6 +253,7 @@ class Store {
     this.longitude,
     this.address,
     this.minimumOrder,
+    this.comission,
     this.scheduleOrder,
     this.currency,
     this.createdAt,
@@ -303,6 +305,7 @@ class Store {
     longitude = json['longitude'];
     address = json['address'];
     minimumOrder = json['minimum_order']?.toDouble();
+    comission = json['comission']?.toDouble();
     scheduleOrder = json['schedule_order'];
     currency = json['currency'];
     createdAt = json['created_at'];
@@ -360,6 +363,7 @@ class Store {
     data['longitude'] = longitude;
     data['address'] = address;
     data['minimum_order'] = minimumOrder;
+    data['comission'] = comission;
     data['schedule_order'] = scheduleOrder;
     data['currency'] = currency;
     data['created_at'] = createdAt;

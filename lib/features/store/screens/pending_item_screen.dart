@@ -165,7 +165,7 @@ class _PendingItemScreenState extends State<PendingItemScreen> with SingleTicker
                                 onTap: () async{
                                   await storeController.getPendingItemDetails(storeController.pendingItem![index].id!).then((success) {
                                     if(success){
-                                      Get.toNamed(RouteHelper.getItemRoute(storeController.item));
+                                      Get.toNamed(RouteHelper.getAddItemRoute(storeController.item));
                                     }
                                   });
                                 },

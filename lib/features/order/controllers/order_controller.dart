@@ -11,6 +11,7 @@ import 'package:sixam_mart_store/features/order/domain/models/running_order_mode
 import 'package:sixam_mart_store/common/widgets/custom_snackbar_widget.dart';
 import 'package:get/get.dart';
 import 'package:sixam_mart_store/features/order/domain/services/order_service_interface.dart';
+import 'package:sixam_mart_store/helper/route_helper.dart';
 
 class OrderController extends GetxController implements GetxService {
   final OrderServiceInterface orderServiceInterface;
@@ -207,7 +208,7 @@ class OrderController extends GetxController implements GetxService {
     getPaginatedOrders(1, true);
   }
 
-  Future<bool> updateOrderStatus(int? orderID, String status, {bool back = false, String? reason, String? processingTime}) async {
+  Future<bool> updateOrderStatus(int? orderID, String status, {bool back = false, String? reason, String? processingTime, bool fromNotification = false}) async {
     _isLoading = true;
     update();
     List<MultipartBody> pickedPrescriptions = orderServiceInterface.processMultipartData(_pickedPrescriptions);
@@ -217,7 +218,9 @@ class OrderController extends GetxController implements GetxService {
     ResponseModel responseModel = await orderServiceInterface.updateOrderStatus(updateStatusBody, pickedPrescriptions);
     Get.back(result: responseModel.isSuccess);
     if(responseModel.isSuccess) {
-      if(back) {
+      if(back && fromNotification) {
+        Get.offAllNamed(RouteHelper.getInitialRoute());
+      }else if(back && !fromNotification){
         Get.back();
       }
       getCurrentOrders();

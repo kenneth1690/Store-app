@@ -25,6 +25,8 @@ class ItemDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isGrocery = Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'grocery';
+    final isPharmacy = Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'pharmacy';
+    final isFood = Get.find<SplashController>().getStoreModuleConfig().newVariation!;
 
     Get.find<StoreController>().setAvailability(item.status == 1);
     Get.find<StoreController>().setRecommended(item.recommendedStatus == 1);
@@ -197,6 +199,75 @@ class ItemDetailsScreen extends StatelessWidget {
                   item: item,
                 ) : VariationView(item: item, stock: module.stock),
 
+                (isFood || isGrocery) && item.nutrition!.isNotEmpty ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+                  Text('nutrition'.tr, style: robotoMedium),
+                  const SizedBox(height: Dimensions.paddingSizeSmall),
+
+                  Wrap(
+                    children: List.generate(item.nutrition!.length, (index) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
+                        margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall, bottom: Dimensions.paddingSizeSmall),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                        ),
+                        child: Text('${item.nutrition![index]}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                      );
+                    }),
+                  ),
+
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
+
+                ]) : const SizedBox(),
+
+                (isFood || isGrocery) && item.allergies!.isNotEmpty ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+                  Text('allergic_ingredients'.tr, style: robotoMedium),
+                  const SizedBox(height: Dimensions.paddingSizeSmall),
+
+                  Wrap(
+                    children: List.generate(item.allergies!.length, (index) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
+                        margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall, bottom: Dimensions.paddingSizeSmall),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                        ),
+                        child: Text('${item.allergies![index]}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                      );
+                    }),
+                  ),
+
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
+
+                ]) : const SizedBox(),
+
+                isPharmacy && item.genericName!.isNotEmpty ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+                  Text('generic_name'.tr, style: robotoMedium),
+                  const SizedBox(height: Dimensions.paddingSizeSmall),
+
+                  Wrap(
+                    children: List.generate(item.genericName!.length, (index) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
+                        margin: const EdgeInsets.only(right: Dimensions.paddingSizeSmall, bottom: Dimensions.paddingSizeSmall),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                        ),
+                        child: Text('${item.genericName![index]}', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                      );
+                    }),
+                  ),
+
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
+
+                ]) : const SizedBox(),
+
                 Row(children: [
 
                   module.stock! ? Text('${'total_stock'.tr}:', style: robotoMedium) : const SizedBox(),
@@ -273,7 +344,7 @@ class ItemDetailsScreen extends StatelessWidget {
             CustomButtonWidget(
               onPressed: () {
                 if(Get.find<ProfileController>().profileModel!.stores![0].itemSection!) {
-                  Get.toNamed(RouteHelper.getItemRoute(item));
+                  Get.toNamed(RouteHelper.getAddItemRoute(item));
                 }else {
                   showCustomSnackBar('this_feature_is_blocked_by_admin'.tr);
                 }

@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:image_compression_flutter/image_compression_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sixam_mart_store/features/profile/controllers/profile_controller.dart';
 import 'package:sixam_mart_store/features/splash/controllers/splash_controller.dart';
 import 'package:sixam_mart_store/api/api_client.dart';
+import 'package:sixam_mart_store/features/store/controllers/store_controller.dart';
 import 'package:sixam_mart_store/features/store/domain/models/attr.dart';
 import 'package:sixam_mart_store/features/store/domain/models/attribute_model.dart';
 import 'package:sixam_mart_store/features/store/domain/models/band_model.dart';
@@ -110,18 +111,28 @@ class StoreRepository implements StoreRepositoryInterface {
   }
 
   @override
-  Future<bool> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags) async {
+  Future<Response> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags, String nutrition, String allergicIngredients, String genericName) async {
     Map<String, String> fields = {};
     fields.addAll(<String, String>{
       'price': item.price.toString(), 'discount': item.discount.toString(), 'veg': item.veg.toString(),
       'discount_type': item.discountType!, 'category_id': item.categoryIds![0].id!,
       'translations': jsonEncode(item.translations), 'tags': tags, 'maximum_cart_quantity': item.maxOrderQuantity.toString(),
     });
+
+    if(Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'grocery' || Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'food') {
+      fields.addAll(<String, String> {'nutritions': nutrition, 'allergies': allergicIngredients});
+    }
+
+    if(Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'pharmacy') {
+      fields.addAll(<String, String> {'generic_name': genericName});
+    }
+
     if(Get.find<SplashController>().configModel!.moduleConfig!.module!.stock!) {
       fields.addAll((<String, String> {'current_stock': item.stock.toString()}));
     }
     if(Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'pharmacy') {
       fields.addAll((<String, String> {'is_prescription_required': item.isPrescriptionRequired!.toString()}));
+      fields.addAll((<String, String> {'basic': item.isBasicMedicine!.toString()}));
     }
     if(Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'ecommerce') {
       fields.addAll((<String, String> {'brand_id': item.brandId.toString()}));
@@ -158,8 +169,10 @@ class StoreRepository implements StoreRepositoryInterface {
       images0.add(MultipartBody('item_images[]', images[index]));
     }
 
-    Response response = await apiClient.postMultipartData(isAdd ? AppConstants.addItemUri : AppConstants.updateItemUri, fields,images0);
-    return (response.statusCode == 200);
+    fields.addAll({'removedImageKeys': jsonEncode(Get.find<StoreController>().removeImageList)});
+
+    Response response = await apiClient.postMultipartData(isAdd ? AppConstants.addItemUri : AppConstants.updateItemUri, fields,images0, handleError: false);
+    return response;
   }
 
   @override
@@ -272,6 +285,39 @@ class StoreRepository implements StoreRepositoryInterface {
     Map<String, String> fields = {'id': reviewID.toString(), 'reply': reply, '_method': 'put'};
     Response response = await apiClient.postData(AppConstants.updateReplyUri, fields);
     return (response.statusCode == 200);
+  }
+
+  @override
+  Future<List<String?>?> getNutritionSuggestionList() async {
+    List<String?>? nutritionSuggestionList;
+    Response response = await apiClient.getData(AppConstants.getNutritionSuggestionUri);
+    if(response.statusCode == 200) {
+      nutritionSuggestionList = [];
+      response.body.forEach((nutrition) => nutritionSuggestionList?.add(nutrition));
+    }
+    return nutritionSuggestionList;
+  }
+
+  @override
+  Future<List<String?>?> getAllergicIngredientsSuggestionList() async {
+    List<String?>? allergicIngredientsSuggestionList;
+    Response response = await apiClient.getData(AppConstants.getAllergicIngredientsSuggestionUri);
+    if(response.statusCode == 200) {
+      allergicIngredientsSuggestionList = [];
+      response.body.forEach((allergicIngredients) => allergicIngredientsSuggestionList?.add(allergicIngredients));
+    }
+    return allergicIngredientsSuggestionList;
+  }
+
+  @override
+  Future<List<String?>?> getGenericNameSuggestionList() async {
+    List<String?>? genericNameSuggestionList;
+    Response response = await apiClient.getData(AppConstants.getGenericNameSuggestionUri);
+    if(response.statusCode == 200) {
+      genericNameSuggestionList = [];
+      response.body.forEach((genericName) => genericNameSuggestionList?.add(genericName));
+    }
+    return genericNameSuggestionList;
   }
 
 }

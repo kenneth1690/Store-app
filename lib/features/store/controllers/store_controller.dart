@@ -3,7 +3,6 @@ import 'package:sixam_mart_store/features/addon/controllers/addon_controller.dar
 import 'package:sixam_mart_store/features/dashboard/screens/dashboard_screen.dart';
 import 'package:sixam_mart_store/features/profile/controllers/profile_controller.dart';
 import 'package:sixam_mart_store/features/splash/controllers/splash_controller.dart';
-import 'package:sixam_mart_store/features/category/controllers/category_controller.dart';
 import 'package:sixam_mart_store/features/store/domain/models/band_model.dart';
 import 'package:sixam_mart_store/features/store/domain/models/variant_type_model.dart';
 import 'package:sixam_mart_store/features/store/domain/models/variation_body_model.dart';
@@ -50,6 +49,9 @@ class StoreController extends GetxController implements GetxService {
 
   List<AttributeModel>? _attributeList;
   List<AttributeModel>? get attributeList => _attributeList;
+
+  final List<String?> _discountTypeList = ['percent', 'amount'];
+  List<String?> get discountTypeList => _discountTypeList;
 
   int _discountTypeIndex = 0;
   int get discountTypeIndex => _discountTypeIndex;
@@ -111,8 +113,8 @@ class StoreController extends GetxController implements GetxService {
   int _imageIndex = 0;
   int get imageIndex => _imageIndex;
 
-  int _unitIndex = 0;
-  int get unitIndex => _unitIndex;
+  int? _unitIndex = 0;
+  int? get unitIndex => _unitIndex;
 
   final List<String> _durations = ['min', 'hours', 'days'];
   List<String> get durations => _durations;
@@ -169,9 +171,77 @@ class StoreController extends GetxController implements GetxService {
   bool _isFabVisible = true;
   bool get isFabVisible => _isFabVisible;
 
+  bool? _isScheduleOrderEnabled = false;
+  bool? get isScheduleOrderEnabled => _isScheduleOrderEnabled;
+
+  bool? _isDeliveryEnabled = false;
+  bool? get isDeliveryEnabled => _isDeliveryEnabled;
+
+  bool? _isCutleryEnabled = false;
+  bool? get isCutleryEnabled => _isCutleryEnabled;
+
+  bool? _isFreeDeliveryEnabled = false;
+  bool? get isFreeDeliveryEnabled => _isFreeDeliveryEnabled;
+
+  bool? _isTakeAwayEnabled = false;
+  bool? get isTakeAwayEnabled => _isTakeAwayEnabled;
+
+  bool? _isPrescriptionStatusEnable = false;
+  bool? get isPrescriptionStatusEnable => _isPrescriptionStatusEnable;
+
+  List<String?>? _nutritionSuggestionList;
+  List<String?>? get nutritionSuggestionList => _nutritionSuggestionList;
+
+  List<int>? _selectedNutrition;
+  List<int>? get selectedNutrition => _selectedNutrition;
+
+  List<String?>? _selectedNutritionList;
+  List<String?>? get selectedNutritionList => _selectedNutritionList;
+
+  List<String?>? _allergicIngredientsSuggestionList;
+  List<String?>? get allergicIngredientsSuggestionList => _allergicIngredientsSuggestionList;
+
+  List<int>? _selectedAllergicIngredients;
+  List<int>? get selectedAllergicIngredients => _selectedAllergicIngredients;
+
+  List<String?>? _selectedAllergicIngredientsList = [];
+  List<String?>? get selectedAllergicIngredientsList => _selectedAllergicIngredientsList;
+
+  List<String?>? _genericNameSuggestionList;
+  List<String?>? get genericNameSuggestionList => _genericNameSuggestionList;
+
+  List<int>? _selectedGenericName;
+  List<int>? get selectedGenericName => _selectedGenericName;
+
+  List<String?>? _selectedGenericNameList = [];
+  List<String?>? get selectedGenericNameList => _selectedGenericNameList;
+
+  bool _isBasicMedicine = false;
+  bool get isBasicMedicine => _isBasicMedicine;
+
+  void initItemData({Item? item, bool isFood = false, bool isGrocery = false, bool isPharmacy = false}) {
+    if(isFood || isGrocery) {
+      _getNutritionSuggestionList();
+      _getAllergicIngredientsSuggestionList();
+      _selectedNutritionList = [];
+      _selectedAllergicIngredientsList = [];
+      if(item != null) {
+        _selectedNutritionList!.addAll(item.nutrition!);
+        _selectedAllergicIngredientsList!.addAll(item.allergies!);
+      }
+    }else if(isPharmacy) {
+      _getGenericNameSuggestionList();
+      _selectedGenericNameList = [];
+      if(item != null) {
+        _selectedGenericNameList!.addAll(item.genericName!);
+      }
+    }
+  }
+
   void initSetup() {
     _isPrescriptionRequired = false;
     _isHalal = false;
+    _isBasicMedicine = false;
   }
 
   void setLanguageSelect(int index) {
@@ -340,7 +410,11 @@ class StoreController extends GetxController implements GetxService {
     _rawImages = [];
     _savedImages = [];
     if(item != null) {
-      _savedImages.addAll(item.imagesFullUrl!);
+      for (var e in item.imagesFullUrl!) {
+        if(e != null) {
+          _savedImages.add(e);
+        }
+      }
     }
     List<AttributeModel>? attributeList = await storeServiceInterface.getAttributeList(item);
     if(attributeList != null) {
@@ -359,7 +433,6 @@ class StoreController extends GetxController implements GetxService {
       await getUnitList(item);
     }
     generateVariantTypes(item);
-    await Get.find<CategoryController>().getCategoryList(item);
   }
 
   void setDiscountTypeIndex(int index, bool notify) {
@@ -427,7 +500,7 @@ class StoreController extends GetxController implements GetxService {
     update();
   }
 
-  Future<void> addItem(Item item, bool isAdd) async {
+  Future<void> addItem(Item item, bool isAdd, {String? genericNameData}) async {
     _isLoading = true;
     update();
     Map<String, String> fields = {};
@@ -458,11 +531,28 @@ class StoreController extends GetxController implements GetxService {
     for (var element in _tagList) {
       tags = tags + (tags.isEmpty ? '' : ',') + element!.replaceAll(' ', '');
     }
-    bool isSuccess = await storeServiceInterface.addItem(item, _rawLogo, _rawImages, _savedImages, fields, isAdd, tags);
-    if(isSuccess) {
-      // Get.offAllNamed(RouteHelper.getInitialRoute());
+
+    String nutrition = '';
+    String allergicIngredients = '';
+    if(Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'grocery' || Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'food') {
+      for (var index in _selectedNutritionList!) {
+        nutrition = nutrition + (nutrition.isEmpty ? '' : ',') + index!.replaceAll(' ', '');
+      }
+
+      for (var index in _selectedAllergicIngredientsList!) {
+        allergicIngredients = allergicIngredients + (allergicIngredients.isEmpty ? '' : ',') + index!.replaceAll(' ', '');
+      }
+    }
+
+    String genericName = '';
+    if(Get.find<ProfileController>().profileModel!.stores![0].module!.moduleType == 'pharmacy') {
+      genericName = genericNameData ?? '';
+    }
+
+    Response response = await storeServiceInterface.addItem(item, _rawLogo, _rawImages, _savedImages, fields, isAdd, tags, nutrition, allergicIngredients, genericName);
+    if(response.statusCode == 200) {
       Get.offAll(() => const DashboardScreen(pageIndex: 2));
-      showCustomSnackBar(isAdd ? 'the_product_will_be_published_once_it_receives_approval_from_the_admin'.tr : 'your_product_added_for_approval'.tr, isError: false);
+      showCustomSnackBar(response.body['message'], isError: false);
       _tagList.clear();
       getItemList('1', 'all', willUpdate: false);
     }
@@ -574,6 +664,12 @@ class StoreController extends GetxController implements GetxService {
     _isStoreVeg = store.veg == 1;
     _isStoreNonVeg = store.nonVeg == 1;
     _isExtraPackagingEnabled = store.extraPackagingStatus;
+    _isScheduleOrderEnabled = store.scheduleOrder;
+    _isDeliveryEnabled = store.delivery;
+    _isCutleryEnabled = store.cutlery;
+    _isFreeDeliveryEnabled = store.freeDelivery;
+    _isTakeAwayEnabled = store.takeAway;
+    _isPrescriptionStatusEnable = store.prescriptionStatus;
   }
 
   void toggleGst() {
@@ -647,6 +743,13 @@ class StoreController extends GetxController implements GetxService {
     }
   }
 
+  void toggleBasicMedicine({bool willUpdate = true}) {
+    _isBasicMedicine = !_isBasicMedicine;
+    if(willUpdate) {
+      update();
+    }
+  }
+
   void setStoreVeg(bool? isVeg, bool notify) {
     _isStoreVeg = isVeg;
     if(notify) {
@@ -667,7 +770,7 @@ class StoreController extends GetxController implements GetxService {
     if(unitList != null) {
       _unitList = [];
       _unitList!.addAll(unitList);
-      _unitIndex = storeServiceInterface.setUnitIndex(_unitList, item, _unitIndex);
+      _unitIndex = storeServiceInterface.setUnitIndex(_unitList, item, _unitIndex!);
     }
     update();
   }
@@ -693,9 +796,22 @@ class StoreController extends GetxController implements GetxService {
     update();
   }
 
+  List<String> _removeImageList = [];
+  List<String> get removeImageList => _removeImageList;
+
   void removeSavedImage(int index) {
+    String imageUrl = _savedImages[index];
     _savedImages.removeAt(index);
+
+    // Extract the file name from the URL
+    String fileName = Uri.parse(imageUrl).pathSegments.last;
+    _removeImageList.add(fileName);
+
     update();
+  }
+
+  void removeImageFromList() {
+    _removeImageList = [];
   }
 
   void setImageIndex(int index, bool notify) {
@@ -805,6 +921,138 @@ class StoreController extends GetxController implements GetxService {
 
   void hideFab() {
     _isFabVisible = false;
+    update();
+  }
+
+  void toggleScheduleOrder() {
+    _isScheduleOrderEnabled = !_isScheduleOrderEnabled!;
+    update();
+  }
+
+  void toggleDelivery() {
+    _isDeliveryEnabled = !_isDeliveryEnabled!;
+    update();
+  }
+
+  void toggleCutlery() {
+    _isCutleryEnabled = !_isCutleryEnabled!;
+    update();
+  }
+
+  void toggleFreeDelivery() {
+    _isFreeDeliveryEnabled = !_isFreeDeliveryEnabled!;
+    update();
+  }
+
+  void toggleTakeAway() {
+    _isTakeAwayEnabled = !_isTakeAwayEnabled!;
+    update();
+  }
+
+  void togglePrescription() {
+    _isPrescriptionStatusEnable = !_isPrescriptionStatusEnable!;
+    update();
+  }
+
+  Future<void> _getNutritionSuggestionList() async{
+    _nutritionSuggestionList = [];
+    _selectedNutrition = [];
+    List<String?>? suggestionList = await storeServiceInterface.getNutritionSuggestionList();
+    if(suggestionList != null) {
+      _nutritionSuggestionList!.addAll(suggestionList);
+      for(int index=0; index<_nutritionSuggestionList!.length; index++){
+        _selectedNutrition!.add(index);
+      }
+    }
+    update();
+  }
+
+  void setNutrition(String? name, {bool willUpdate = true}){
+    _selectedNutritionList!.add(name);
+    if(willUpdate) {
+      update();
+    }
+  }
+
+  void setSelectedNutritionIndex(int index, bool notify) {
+    if(_selectedNutrition!.contains(index)) {
+      _selectedNutritionList!.add(_nutritionSuggestionList![index]);
+      if(notify) {
+        update();
+      }
+    }
+  }
+
+  void removeNutrition(int index) {
+    _selectedNutritionList!.removeAt(index);
+    update();
+  }
+
+  Future<void> _getAllergicIngredientsSuggestionList() async{
+    _allergicIngredientsSuggestionList = [];
+    _selectedAllergicIngredients = [];
+    List<String?>? suggestionList = await storeServiceInterface.getAllergicIngredientsSuggestionList();
+    if(suggestionList != null) {
+      _allergicIngredientsSuggestionList!.addAll(suggestionList);
+      for(int index=0; index<_allergicIngredientsSuggestionList!.length; index++){
+        _selectedAllergicIngredients!.add(index);
+      }
+    }
+    update();
+  }
+
+  void setAllergicIngredients(String? name, {bool willUpdate = true}){
+    _selectedAllergicIngredientsList!.add(name);
+    if(willUpdate) {
+      update();
+    }
+  }
+
+  void setSelectedAllergicIngredientsIndex(int index, bool notify) {
+    if(_selectedAllergicIngredients!.contains(index)) {
+      _selectedAllergicIngredientsList!.add(_allergicIngredientsSuggestionList![index]);
+      if(notify) {
+        update();
+      }
+    }
+  }
+
+  void removeAllergicIngredients(int index) {
+    _selectedAllergicIngredientsList!.removeAt(index);
+    update();
+  }
+
+  Future<void> _getGenericNameSuggestionList() async{
+    _genericNameSuggestionList = [];
+    _selectedGenericName = [];
+    List<String?>? suggestionList = await storeServiceInterface.getGenericNameSuggestionList();
+    if(suggestionList != null) {
+      _genericNameSuggestionList!.addAll(suggestionList);
+      for(int index=0; index<_genericNameSuggestionList!.length; index++){
+        _selectedGenericName!.add(index);
+      }
+    }
+    update();
+  }
+
+  void setGenericName(String? name, {bool willUpdate = true}){
+    _selectedGenericNameList!.add(name);
+    if(willUpdate) {
+      update();
+    }
+  }
+
+  void setSelectedGenericNameIndex(int index, bool notify) {
+    if(_selectedGenericName!.contains(index)) {
+      _selectedGenericNameList!.add(_genericNameSuggestionList![index]);
+      if(notify) {
+        update();
+      }
+    }
+  }
+
+  void removeGenericName(int index) {
+    _selectedGenericNameList!.removeAt(index);
     update();
   }
 

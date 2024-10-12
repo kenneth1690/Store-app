@@ -23,7 +23,7 @@ class _SubscriptionSuccessOrFailedScreenState extends State<SubscriptionSuccessO
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async{
+      onPopInvokedWithResult: (didPop, result) async{
         if(widget.success) {
           Get.find<AuthController>().saveIsStoreRegistrationSharedPref(true);
           Get.offAllNamed(RouteHelper.getSignInRoute());

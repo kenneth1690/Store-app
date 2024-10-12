@@ -36,8 +36,8 @@ class _StoreScreenState extends State<StoreScreen> with TickerProviderStateMixin
     _tabController!.addListener(() {
       Get.find<StoreController>().setTabIndex(_tabController!.index);
     });
-    Get.find<StoreController>().getItemList('1', 'all');
-    Get.find<StoreController>().getStoreReviewList(Get.find<ProfileController>().profileModel!.stores![0].id, '');
+    Get.find<StoreController>().getItemList('1', 'all', willUpdate: false);
+    Get.find<StoreController>().getStoreReviewList(Get.find<ProfileController>().profileModel!.stores![0].id, '', willUpdate: false);
   }
 
   @override
@@ -67,7 +67,7 @@ class _StoreScreenState extends State<StoreScreen> with TickerProviderStateMixin
                 onPressed: () {
                   if(Get.find<ProfileController>().profileModel!.stores![0].itemSection!) {
                     if (store != null) {
-                      Get.toNamed(RouteHelper.getItemRoute(null));
+                      Get.toNamed(RouteHelper.getAddItemRoute(null));
                     }
                   }else {
                     showCustomSnackBar('this_feature_is_blocked_by_admin'.tr);
@@ -90,10 +90,13 @@ class _StoreScreenState extends State<StoreScreen> with TickerProviderStateMixin
                 backgroundColor: Theme.of(context).primaryColor,
                 actions: [IconButton(
                   icon: Container(
-                    height: 50, width: 50, alignment: Alignment.center,
+                    height: 50, width: 40, alignment: Alignment.center,
                     padding: const EdgeInsets.all(7),
-                    decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
-                    child: Image.asset(Images.edit),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                      border: Border.all(color: Theme.of(context).cardColor.withOpacity(0.7), width: 1.5),
+                    ),
+                    child: Icon(Icons.edit, color: Theme.of(context).cardColor, size: 20),
                   ),
                   onPressed: () {
                     if(Get.find<ProfileController>().modulePermission!.storeSetup! && Get.find<ProfileController>().modulePermission!.myShop!){
@@ -114,93 +117,93 @@ class _StoreScreenState extends State<StoreScreen> with TickerProviderStateMixin
               SliverToBoxAdapter(child: Center(child: Container(
                 width: 1170,
                 padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                color: Theme.of(context).cardColor,
-                child: Column(children: [
-                  Row(children: [
-                    Builder(
-                      builder: (context) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                          child: CustomImageWidget(
-                            image: '${store.logoFullUrl}',
-                            height: 40, width: 50, fit: BoxFit.cover,
-                          ),
-                        );
-                      }
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  boxShadow: const [BoxShadow(color:Colors.black12, spreadRadius: 1, blurRadius: 5)],
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(Dimensions.radiusLarge),
+                    bottomRight: Radius.circular(Dimensions.radiusLarge),
+                  ),
+                ),
+                child: Row(children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                    child: CustomImageWidget(
+                      image: '${store.coverPhotoFullUrl}',
+                      height: 70, width: 80, fit: BoxFit.cover,
                     ),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
-                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(
-                        store.name!, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
-                        maxLines: 1, overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        store.address ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
-                      ),
-                    ])),
-                    
-                    InkWell(
-                      onTap: () => Get.toNamed(RouteHelper.getAnnouncementRoute(announcementStatus: store.isAnnouncementActive!, announcementMessage: store.announcementMessage ?? '')),
-                      child: Container(
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor,
-                          border: Border.all(color: Theme.of(context).cardColor, width: 2),
-                          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1))],
-                        ),
-                        child: Image.asset(Images.announcementIcon, height: 20, width: 20, color: Theme.of(context).cardColor),
-                      ),
-                    ),
-                  ]),
-                  const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+                  ),
+                  const SizedBox(width: Dimensions.paddingSizeDefault),
 
-                  Row(children: [
-                    Icon(Icons.star, color: Theme.of(context).primaryColor, size: 18),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                     Text(
-                      store.avgRating!.toStringAsFixed(1),
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
+                      store.name ?? '', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
-                    Text(
-                      '${store.ratingCount ?? 0} ${'ratings'.tr}',
-                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
-                    ),
-                  ]),
-                  const SizedBox(height: Dimensions.paddingSizeSmall),
 
-                  store.discount != null ? Container(
-                    width: context.width,
-                    margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), color: Theme.of(context).primaryColor),
-                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Text(
+                      store.address ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
+                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor),
+                    ),
+
+                    Row(children: [
+                      Icon(Icons.star_rounded, color: Theme.of(context).hintColor, size: 18),
                       Text(
-                        '${store.discount!.discount}% ${'off'.tr}',
-                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).cardColor),
+                        store.avgRating!.toStringAsFixed(1),
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                       ),
+                      const SizedBox(width: Dimensions.paddingSizeSmall),
                       Text(
-                        '${'enjoy'.tr} ${store.discount!.discount}% ${Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText! ? 'off_on_all_foods'.tr : 'off_on_all_items'.tr}',
-                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).cardColor),
+                        '${store.ratingCount ?? 0} ${'ratings'.tr}',
+                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
                       ),
-                      SizedBox(height: (store.discount!.minPurchase != 0 || store.discount!.maxDiscount != 0) ? 5 : 0),
-                      store.discount!.minPurchase != 0 ? Text(
-                        '[ ${'minimum_purchase'.tr}: ${PriceConverterHelper.convertPrice(store.discount!.minPurchase)} ]',
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor),
-                      ) : const SizedBox(),
-                      store.discount!.maxDiscount != 0 ? Text(
-                        '[ ${'maximum_discount'.tr}: ${PriceConverterHelper.convertPrice(store.discount!.maxDiscount)} ]',
-                        style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor),
-                      ) : const SizedBox(),
                     ]),
-                  ) : const SizedBox(),
 
-                  (store.delivery! && store.freeDelivery!) ? Text(
-                    'free_delivery'.tr,
-                    style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
-                  ) : const SizedBox(),
+                    store.discount != null ? Container(
+                      width: context.width,
+                      margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), color: Theme.of(context).primaryColor),
+                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                        Text(
+                          '${store.discount!.discount}% ${'off'.tr}',
+                          style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge, color: Theme.of(context).cardColor),
+                        ),
+                        Text(
+                          '${'enjoy'.tr} ${store.discount!.discount}% ${Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText! ? 'off_on_all_foods'.tr : 'off_on_all_items'.tr}',
+                          style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).cardColor),
+                        ),
+                        SizedBox(height: (store.discount!.minPurchase != 0 || store.discount!.maxDiscount != 0) ? 5 : 0),
+                        store.discount!.minPurchase != 0 ? Text(
+                          '[ ${'minimum_purchase'.tr}: ${PriceConverterHelper.convertPrice(store.discount!.minPurchase)} ]',
+                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor),
+                        ) : const SizedBox(),
+                        store.discount!.maxDiscount != 0 ? Text(
+                          '[ ${'maximum_discount'.tr}: ${PriceConverterHelper.convertPrice(store.discount!.maxDiscount)} ]',
+                          style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).cardColor),
+                        ) : const SizedBox(),
+                      ]),
+                    ) : const SizedBox(),
 
+                    (store.delivery! && store.freeDelivery!) ? Text(
+                      'free_delivery'.tr,
+                      style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
+                    ) : const SizedBox(),
+                  ])),
+
+                  InkWell(
+                    onTap: () => Get.toNamed(RouteHelper.getAnnouncementRoute(announcementStatus: store.isAnnouncementActive!, announcementMessage: store.announcementMessage ?? '')),
+                    child: Container(
+                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).primaryColor,
+                        border: Border.all(color: Theme.of(context).cardColor, width: 2),
+                        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1))],
+                      ),
+                      child: Image.asset(Images.announcementIcon, height: 20, width: 20, color: Theme.of(context).cardColor),
+                    ),
+                  ),
                 ]),
               ))),
 
@@ -211,11 +214,13 @@ class _StoreScreenState extends State<StoreScreen> with TickerProviderStateMixin
                   decoration: BoxDecoration(color: Theme.of(context).cardColor),
                   child: TabBar(
                     controller: _tabController,
-                    indicatorColor: Theme.of(context).primaryColor,
+                    indicatorColor: Theme.of(context).hintColor,
                     indicatorWeight: 3,
-                    labelColor: Theme.of(context).primaryColor,
+                    padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: Theme.of(context).textTheme.bodyLarge!.color,
                     unselectedLabelColor: Theme.of(context).disabledColor,
-                    unselectedLabelStyle: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
+                    unselectedLabelStyle: robotoBold.copyWith(color: Theme.of(context).disabledColor),
                     labelStyle: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
                     tabs: _review! ? [
                       Tab(text: 'all_items'.tr),

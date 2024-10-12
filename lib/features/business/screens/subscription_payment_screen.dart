@@ -29,7 +29,7 @@ class _SubscriptionPaymentScreenState extends State<SubscriptionPaymentScreen> {
     return GetBuilder<BusinessController>(builder: (businessController) {
       return PopScope(
         canPop: Navigator.canPop(context),
-        onPopInvoked: (didPop) async{
+        onPopInvokedWithResult: (didPop, result) async{
           if(canBack) {
           }else {
             _showBackPressedDialogue('your_business_plan_not_setup_yet'.tr);

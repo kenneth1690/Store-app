@@ -49,8 +49,8 @@ class StoreService implements StoreServiceInterface {
   }
 
   @override
-  Future<bool> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags) async {
-    return await storeRepositoryInterface.addItem(item, image, images, savedImages, attributes, isAdd, tags);
+  Future<Response> addItem(Item item, XFile? image, List<XFile> images, List<String> savedImages, Map<String, String> attributes, bool isAdd, String tags, String nutrition, String allergicIngredients, String genericName) async {
+    return await storeRepositoryInterface.addItem(item, image, images, savedImages, attributes, isAdd, tags, nutrition, allergicIngredients, genericName);
   }
 
   @override
@@ -146,7 +146,7 @@ class StoreService implements StoreServiceInterface {
     for(int index = 0; index < unitList!.length; index++) {
       if(item != null) {
         if (unitList[index].unit == item.unitType) {
-          setUnitIndex = index + 1;
+          setUnitIndex = index;
         }
       }
     }
@@ -292,6 +292,21 @@ class StoreService implements StoreServiceInterface {
       }
     }
     return brandIndex;
+  }
+
+  @override
+  Future<List<String?>?> getNutritionSuggestionList() async {
+    return await storeRepositoryInterface.getNutritionSuggestionList();
+  }
+
+  @override
+  Future<List<String?>?> getAllergicIngredientsSuggestionList() async {
+    return await storeRepositoryInterface.getAllergicIngredientsSuggestionList();
+  }
+
+  @override
+  Future<List<String?>?> getGenericNameSuggestionList() async {
+    return await storeRepositoryInterface.getGenericNameSuggestionList();
   }
 
 }
