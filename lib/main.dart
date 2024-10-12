@@ -34,10 +34,14 @@ Future<void> main() async {
   if(GetPlatform.isAndroid) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: "AIzaSyCic6Mw3RRPFcimXhwGidwhCN0tXY7HFFc",
-        appId: "1:1000163153346:android:9d8caf29b912e11606b25b",
-        messagingSenderId: "1000163153346",
-        projectId: "ammart-8885e",
+        apiKey: "AIzaSyCf8LpLH4EKqGr4KzZ84gRafInwpFTdqr8",
+        authDomain: "kimii-d7954.firebaseapp.com",
+        databaseURL: "https://kimii-d7954.firebaseio.com",
+        projectId: "kimii-d7954",
+        storageBucket: "kimii-d7954.appspot.com",
+        messagingSenderId: "582415906606",
+        appId: "1:582415906606:web:f3d5d21df3b7b47921ecbf",
+        measurementId: "G-4X15EKMV26"
       ),
     );
   }else {

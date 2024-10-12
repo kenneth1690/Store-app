@@ -27,13 +27,13 @@
         </queries>
 
         <application
-            android:label="6amMart Store"
+            android:label="KiMii Store"
             android:name="${applicationName}"
             android:requestLegacyExternalStorage="true"
             android:usesCleartextTraffic="true"
             android:icon="@mipmap/ic_launcher">
             <meta-data android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyCaCSJ0BZItSyXqBv8vpD1N4WBffJeKhLQ"/>
+                android:value="AIzaSyAL1ZrNCsfbRSxF51BW9xY-j6CuQGNHyU0"/>
 
             <activity
                 android:name=".MainActivity"

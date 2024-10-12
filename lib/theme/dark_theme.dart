@@ -3,7 +3,7 @@ import 'package:sixam_mart_store/util/app_constants.dart';
 
 ThemeData dark = ThemeData(
   fontFamily: AppConstants.fontFamily,
-  primaryColor: const Color(0xFF54b46b),
+  primaryColor: const Color(0xFFda291c),
   secondaryHeaderColor: const Color(0xFF010d75),
   disabledColor: const Color(0xFF6f7275),
   brightness: Brightness.dark,
